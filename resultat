@@ -1,165 +1,68 @@
 mysql> SELECT
-    ->   w.firstname,
-    ->   w.lastname,
-    ->   p.role,
+    ->   t.name,
+    ->   COUNT(*) AS nb_student
+    -> FROM
+    ->   team t
+    ->   JOIN player p ON p.team_id = t.id
+    -> GROUP BY
     ->   t.name
+    -> ORDER BY
+    ->   nb_student DESC;
++------------+------------+
+| name       | nb_student |
++------------+------------+
+| Gryffindor |         36 |
+| Slytherin  |         21 |
+| Ravenclaw  |         15 |
+| Hufflepuff |         12 |
++------------+------------+
+4 rows in set (0.00 sec)
+
+
+mysql> SELECT
+    ->   t.name
+    -> FROM
+    ->   team t
+    ->   JOIN player p ON p.team_id = t.id
+    -> GROUP BY
+    ->   t.name
+    ->   HAVING COUNT(*) > 14
+    -> ORDER BY
+    ->   t.name ASC;
++------------+
+| name       |
++------------+
+| Gryffindor |
+| Ravenclaw  |
+| Slytherin  |
++------------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT
+    ->   CONCAT(firstname, ' ', lastname) AS fullname,
+    ->   DATE_FORMAT(p.enrollment_date, '%W %M %Y') AS enrollment_day
     -> FROM
     ->   player p
-    ->   LEFT JOIN wizard w ON w.id = p.wizard_id
-    ->   LEFT JOIN team t ON t.id = p.team_id
-    -> ORDER BY
-    ->   t.name ASC,
-    ->   p.role,
-    ->   w.lastname,
-    ->   w.firstname;
-+-------------+-----------------+--------+------------+
-| firstname   | lastname        | role   | name       |
-+-------------+-----------------+--------+------------+
-| Sirius      | Black           | beater | Gryffindor |
-| Lavender    | Brown           | beater | Gryffindor |
-| Seamus      | Finnigan        | beater | Gryffindor |
-| Rubeus      | Hagrid          | beater | Gryffindor |
-| Alice       | Longbottom      | beater | Gryffindor |
-| Minerva     | McGonagall      | beater | Gryffindor |
-| Harry       | Potter          | beater | Gryffindor |
-| James       | Potter          | beater | Gryffindor |
-| Dean        | Thomas          | beater | Gryffindor |
-| Arthur      | Weasley         | beater | Gryffindor |
-| Percy       | Weasley         | beater | Gryffindor |
-| Katie       | Bell            | chaser | Gryffindor |
-| Albus       | Dumbledore      | chaser | Gryffindor |
-| Hermione    | Granger         | chaser | Gryffindor |
-| Lily        | J.              | chaser | Gryffindor |
-| Lee         | Jordan          | chaser | Gryffindor |
-| Augusta     | Longbottom      | chaser | Gryffindor |
-| Frank       | Longbottom      | chaser | Gryffindor |
-| Neville     | Longbottom      | chaser | Gryffindor |
-| Peter       | Pettigrew       | chaser | Gryffindor |
-| Alicia      | Spinnet         | chaser | Gryffindor |
-| George      | Weasley         | chaser | Gryffindor |
-| Oliver      | Wood            | chaser | Gryffindor |
-| Cadogan     |                 | keeper | Gryffindor |
-| Dennis      | Creevey         | keeper | Gryffindor |
-| Nicholas    | de              | keeper | Gryffindor |
-| Aberforth   | Dumbledore      | keeper | Gryffindor |
-| Angelina    | Johnson         | keeper | Gryffindor |
-| Ginevra     | Weasley         | keeper | Gryffindor |
-| Cuthbert    | Binns           | seeker | Gryffindor |
-| Colin       | Creevey         | seeker | Gryffindor |
-| Godric      | Gryffindor      | seeker | Gryffindor |
-| Romilda     | Vane            | seeker | Gryffindor |
-| Fred        | Weasley         | seeker | Gryffindor |
-| Ronald      | Weasley         | seeker | Gryffindor |
-| William     | Weasley         | seeker | Gryffindor |
-| Hannah      | Abbott          | beater | Hufflepuff |
-| Justin      | Finch-Fletchley | beater | Hufflepuff |
-| Fat         | Friar           | beater | Hufflepuff |
-| Hepzibah    | Smith           | beater | Hufflepuff |
-| Pomona      | Sprout          | beater | Hufflepuff |
-| Nymphadora  | Tonks           | beater | Hufflepuff |
-| Amelia      | Bones           | chaser | Hufflepuff |
-| Newton      | Scamander       | chaser | Hufflepuff |
-| Susan       | Bones           | keeper | Hufflepuff |
-| Cedric      | Diggory         | keeper | Hufflepuff |
-| Zacharias   | Smith           | keeper | Hufflepuff |
-| Helga       | Hufflepuff      | seeker | Hufflepuff |
-| Penelope    | Clearwater      | beater | Ravenclaw  |
-| Quirinus    | Quirrell        | beater | Ravenclaw  |
-| Helena      | Ravenclaw       | beater | Ravenclaw  |
-| Myrtle      | Warren          | beater | Ravenclaw  |
-| Cho         | Chang           | chaser | Ravenclaw  |
-| Marietta    | Edgecombe       | chaser | Ravenclaw  |
-| Filius      | Flitwick        | chaser | Ravenclaw  |
-| Anthony     | Goldstein       | chaser | Ravenclaw  |
-| Gilderoy    | Lockhart        | chaser | Ravenclaw  |
-| Luna        | Lovegood        | chaser | Ravenclaw  |
-| Xenophilius | Lovegood        | chaser | Ravenclaw  |
-| Garrick     | Ollivander      | chaser | Ravenclaw  |
-| Michael     | Corner          | seeker | Ravenclaw  |
-| Rowena      | Ravenclaw       | seeker | Ravenclaw  |
-| Sybill      | Trelawney       | seeker | Ravenclaw  |
-| Millicent   | Bulstrode       | beater | Slytherin  |
-| Vincent     | Crabbe          | beater | Slytherin  |
-| Marcus      | Flint           | beater | Slytherin  |
-| Pansy       | Parkinson       | beater | Slytherin  |
-| Severus     | Snape           | beater | Slytherin  |
-| Blaise      | Zabini          | beater | Slytherin  |
-| Bloody      | Baron           | chaser | Slytherin  |
-| Bellatrix   | Lestrange       | chaser | Slytherin  |
-| Rodolphus   | Lestrange       | chaser | Slytherin  |
-| Draco       | Malfoy          | chaser | Slytherin  |
-| Lucius      | Malfoy          | chaser | Slytherin  |
-| Phineas     | Nigellus        | chaser | Slytherin  |
-| Theodore    | Nott            | chaser | Slytherin  |
-| Tom         | Riddle          | chaser | Slytherin  |
-| Andromeda   | Tonks           | chaser | Slytherin  |
-| Regulus     | Black           | keeper | Slytherin  |
-| Gregory     | Goyle           | seeker | Slytherin  |
-| Rabastan    | Lestrange       | seeker | Slytherin  |
-| Narcissa    | Malfoy          | seeker | Slytherin  |
-| Salazar     | Slytherin       | seeker | Slytherin  |
-| Dolores     | Umbridge        | seeker | Slytherin  |
-+-------------+-----------------+--------+------------+
-84 rows in set (0.00 sec)
-
-mysql> SELECT
-    ->   w.firstname,
-    ->   w.lastname
-    -> FROM
-    ->   wizard w
-    ->   LEFT JOIN player p ON p.wizard_id = w.id
+    ->   JOIN wizard w ON p.wizard_id = w.id
     -> WHERE
-    ->   p.role LIKE 'seeker'
+    ->   DATE_FORMAT(p.enrollment_date, '%W') LIKE 'Monday'
     -> ORDER BY
-    ->   w.firstname ASC,
-    ->   w.lastname ASC;
-+-----------+------------+
-| firstname | lastname   |
-+-----------+------------+
-| Colin     | Creevey    |
-| Cuthbert  | Binns      |
-| Dolores   | Umbridge   |
-| Fred      | Weasley    |
-| Godric    | Gryffindor |
-| Gregory   | Goyle      |
-| Helga     | Hufflepuff |
-| Michael   | Corner     |
-| Narcissa  | Malfoy     |
-| Rabastan  | Lestrange  |
-| Romilda   | Vane       |
-| Ronald    | Weasley    |
-| Rowena    | Ravenclaw  |
-| Salazar   | Slytherin  |
-| Sybill    | Trelawney  |
-| William   | Weasley    |
-+-----------+------------+
-16 rows in set (0.00 sec)
-
-mysql> SELECT
-    ->   w.firstname,
-    ->   w.lastname,
-    ->   p.role,
-    ->   t.name
-    -> FROM
-    ->   wizard w
-    ->   LEFT JOIN player p ON p.wizard_id = w.id
-    ->   LEFT JOIN team t ON p.team_id = t.id
-    -> WHERE
-    ->   t.name IS NULL
-    -> ORDER BY
-    ->   w.firstname ASC,
-    ->   w.lastname ASC;
-+-----------+----------+------+------+
-| firstname | lastname | role | name |
-+-----------+----------+------+------+
-| Charles   | Weasley  | NULL | NULL |
-| Crabbe    |          | NULL | NULL |
-| Demelza   | Robins   | NULL | NULL |
-| Horace    | Slughorn | NULL | NULL |
-| Molly     | Weasley  | NULL | NULL |
-| Padma     | Patil    | NULL | NULL |
-| Parvati   | Patil    | NULL | NULL |
-| Remus     | Lupin    | NULL | NULL |
-| Terry     | Boot     | NULL | NULL |
-+-----------+----------+------+------+
-9 rows in set (0.01 sec)
+    ->   DATE(p.enrollment_date);
++----------------------+----------------------+
+| fullname             | enrollment_day       |
++----------------------+----------------------+
+| Xenophilius Lovegood | Monday March 1991    |
+| Blaise Zabini        | Monday July 1991     |
+| George Weasley       | Monday August 1991   |
+| Cho Chang            | Monday January 1992  |
+| Alice Longbottom     | Monday February 1992 |
+| Cadogan              | Monday January 1993  |
+| Godric Gryffindor    | Monday August 1993   |
+| Sirius Black         | Monday January 1994  |
+| Aberforth Dumbledore | Monday April 1995    |
+| Hannah Abbott        | Monday October 1995  |
+| Theodore Nott        | Monday December 1996 |
+| Marcus Flint         | Monday December 1996 |
+| Augusta Longbottom   | Monday October 1999  |
++----------------------+----------------------+
+13 rows in set (0.00 sec)
