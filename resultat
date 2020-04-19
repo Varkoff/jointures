@@ -26,7 +26,7 @@ mysql> SELECT
     ->   JOIN player p ON p.team_id = t.id
     -> GROUP BY
     ->   t.name
-    ->   HAVING COUNT(*) > 14
+    ->   HAVING COUNT(*) >= 14
     -> ORDER BY
     ->   t.name ASC;
 +------------+
@@ -40,29 +40,26 @@ mysql> SELECT
 
 mysql> SELECT
     ->   CONCAT(firstname, ' ', lastname) AS fullname,
-    ->   DATE_FORMAT(p.enrollment_date, '%W %M %Y') AS enrollment_day
+    ->   DATE_FORMAT(p.enrollment_date, '%W %M %Y') AS enrollment_day,
+    ->   t.name
     -> FROM
     ->   player p
     ->   JOIN wizard w ON p.wizard_id = w.id
+    ->   JOIN team t on p.team_id = t.id
     -> WHERE
     ->   DATE_FORMAT(p.enrollment_date, '%W') LIKE 'Monday'
+    ->   AND t.name LIKE 'Gryffindor'
     -> ORDER BY
     ->   DATE(p.enrollment_date);
-+----------------------+----------------------+
-| fullname             | enrollment_day       |
-+----------------------+----------------------+
-| Xenophilius Lovegood | Monday March 1991    |
-| Blaise Zabini        | Monday July 1991     |
-| George Weasley       | Monday August 1991   |
-| Cho Chang            | Monday January 1992  |
-| Alice Longbottom     | Monday February 1992 |
-| Cadogan              | Monday January 1993  |
-| Godric Gryffindor    | Monday August 1993   |
-| Sirius Black         | Monday January 1994  |
-| Aberforth Dumbledore | Monday April 1995    |
-| Hannah Abbott        | Monday October 1995  |
-| Theodore Nott        | Monday December 1996 |
-| Marcus Flint         | Monday December 1996 |
-| Augusta Longbottom   | Monday October 1999  |
-+----------------------+----------------------+
-13 rows in set (0.00 sec)
++----------------------+----------------------+------------+
+| fullname             | enrollment_day       | name       |
++----------------------+----------------------+------------+
+| George Weasley       | Monday August 1991   | Gryffindor |
+| Alice Longbottom     | Monday February 1992 | Gryffindor |
+| Cadogan              | Monday January 1993  | Gryffindor |
+| Godric Gryffindor    | Monday August 1993   | Gryffindor |
+| Sirius Black         | Monday January 1994  | Gryffindor |
+| Aberforth Dumbledore | Monday April 1995    | Gryffindor |
+| Augusta Longbottom   | Monday October 1999  | Gryffindor |
++----------------------+----------------------+------------+
+
